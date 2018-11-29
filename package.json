@@ -1,0 +1,33 @@
+{
+  "name": "vue-calendar-input",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/vue-calendar-input.common.js",
+  "scripts": {
+    "build": "vue-cli-service build --target lib --name vue-calendar-input ./src/DatePicker.vue"
+  },
+  "dependencies": {
+    "date-fns": "^1.29.0",
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.3",
+    "@vue/cli-service": "^3.0.3",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "vue": {
+    "css": { "extract": false }
+  }
+}
