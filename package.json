@@ -1,6 +1,6 @@
 {
-  "name": "vue-calendar-input",
-  "version": "0.1.1",
+  "name": "v-cal-input",
+  "version": "0.1.2",
   "license": "MIT",
   "main": "./dist/vue-calendar-input.common.js",
   "scripts": {

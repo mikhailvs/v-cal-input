@@ -1,4 +1,4 @@
-# vue-calendar-input
+# Vue Calendar Input
 Simple, clean calendar input with single date select, or date range selection.
 
 ### [Demo](https://mikhailvs.github.io/vue-calendar-input/)
@@ -6,13 +6,13 @@ Simple, clean calendar input with single date select, or date range selection.
 ## Installation
 
 ```
-yarn add vue-calendar-input
+yarn add v-cal-input
 ```
 
 or
 
 ```
-npm install vue-calendar-input
+npm install v-cal-input
 ```
 
 ## Usage
