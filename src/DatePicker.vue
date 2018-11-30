@@ -35,7 +35,7 @@
         {{ day.getDate() }}
       </li>
 
-      <li class="day-pad" v-if="showExtraBlankRow(offset)" v-for="_ in Array(7)"></li>
+      <li class="day-pad" v-for="_ in Array(7 * blankBottomRows(offset))"></li>
     </ol>
   </div>
 </template>
@@ -101,8 +101,8 @@
         this.reference = subMonths(this.reference, 1)
       },
 
-      showExtraBlankRow(offset) {
-        return differenceInCalendarWeeks(this.lastDay(offset), this.firstDay(offset)) < 5;
+      blankBottomRows(offset) {
+        return 5 - differenceInCalendarWeeks(this.lastDay(offset), this.firstDay(offset));
       },
 
       rangeModeCellClasses(day) {
@@ -246,10 +246,6 @@
       width: var(--width);
       display: inline-block;
       position: relative;
-
-      &:nth-child(2) {
-        background: #f2f2ff;
-      }
 
       li {
         user-select: none;
