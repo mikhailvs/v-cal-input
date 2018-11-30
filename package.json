@@ -1,7 +1,6 @@
 {
   "name": "vue-calendar-input",
   "version": "0.1.0",
-  "private": true,
   "main": "./dist/vue-calendar-input.common.js",
   "scripts": {
     "serve": "vue-cli-service serve",
