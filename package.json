@@ -30,6 +30,7 @@
     "not ie <= 8"
   ],
   "vue": {
-    "css": { "extract": false }
+    "css": { "extract": false },
+    "baseUrl": "/vue-calendar-input/"
   }
 }
