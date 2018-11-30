@@ -1,26 +1,28 @@
 <template>
-  <div>
-    <ol v-for="offset in [0, 1]">
+  <div class="date-picker" :style="{
+    '--width': `${width}px`
+  }">
+    <span class="go" @click="backward()">&#8249;</span>
+
+    <ol v-for="offset in offsets" class="calendar">
       <li class="month-name">
-        {{ monthName(offset) }}
+        {{ monthName(offset) }} {{ year(offset) }}
       </li>
 
       <li class="day-name" v-for="name in dayNames">
         {{ name }}
       </li>
 
-      <li v-for="_ in Array(weekdayPadding(offset))"></li>
+      <li class="day-pad" v-for="_ in Array(weekdayPadding(offset))"></li>
 
       <li class="day"
-          :class="{
-            selected: daySelected(day),
-            highlighted: dayHighlighted(day),
-            first: isFirst(day),
-            last: isLast(day),
-            'last-highlighted': isLastHovered(day),
-            'others-highlighted': !isLastHovered(day) && lastHovered,
-            'in-range': isInRange(day)
-          }"
+          :class="Object.assign(
+            {
+              selected: daySelected(day),
+              today: isCurrentDay(day)
+            },
+            mode === 'range' ? rangeModeCellClasses(day) : {}
+          )"
           @mousedown="selected(day)"
           @mouseup="selected(day)"
           @click="selected(day)"
@@ -29,7 +31,11 @@
       >
         {{ day.getDate() }}
       </li>
+
+      <li class="day-pad" v-if="showExtraBlankRow(offset)" v-for="_ in Array(7)"></li>
     </ol>
+
+    <span class="go" @click="forward()">&#8250;</span>
   </div>
 </template>
 
@@ -42,17 +48,73 @@
     isWithinRange,
     isAfter,
     addMonths,
-    isEqual
+    isEqual,
+    differenceInCalendarWeeks,
+    subMonths,
+    isToday
   } from 'date-fns'
 
   export default {
     name: 'DatePicker',
 
-    props: [
-      'value'
-    ],
+    props: {
+      value: {
+        type: Object,
+        default: { first: null, last: null }
+      },
+
+      width: {
+        type: Number,
+        default: 250
+      },
+
+      mode: {
+        type: String,
+        default: 'single',
+        validator: v => ['single', 'range'].indexOf(v) > -1
+      },
+
+      panels: {
+        type: Number,
+        default: 1,
+        validator: v => v > 0 && v <= 12
+      }
+    },
+
+    computed: {
+      offsets() {
+        return Array.from(Array(this.panels).keys())
+      }
+    },
 
     methods: {
+      isCurrentDay(day) {
+        return isToday(day)
+      },
+
+      forward() {
+        this.reference = addMonths(this.reference, 1)
+      },
+
+      backward() {
+        this.reference = subMonths(this.reference, 1)
+      },
+
+      showExtraBlankRow(offset) {
+        return differenceInCalendarWeeks(this.lastDay(offset), this.firstDay(offset)) < 5;
+      },
+
+      rangeModeCellClasses(day) {
+        return {
+          highlighted: this.dayHighlighted(day),
+          first: this.isFirst(day),
+          last: this.isLast(day),
+          'last-highlighted': this.isLastHovered(day),
+          'others-highlighted': !this.isLastHovered(day) && this.lastHovered,
+          'in-range': this.isInRange(day)
+        }
+      },
+
       setLastHovered(day) {
         if (this.selection.first && isAfter(this.selection.first, day)) {
           this.lastHovered = null
@@ -101,6 +163,10 @@
         return format(addMonths(this.reference, offset), 'MMMM')
       },
 
+      year(offset) {
+        return format(addMonths(this.reference, offset), 'YYYY')
+      },
+
       daySelected(day) {
         return isEqual(this.selection.first, day) ||
           isEqual(this.selection.last, day)
@@ -122,29 +188,25 @@
       },
 
       selected(day) {
-        if (!this.selection.first) {
-          this.selection.first = day
+        const sel = this.selection
 
-          return
-        }
-
-        if (isEqual(this.selection.first, day)) {
-          this.selection.first = null
-          this.selection.last = null
-
-          return
-        }
-
-        if (isEqual(this.selection.last, day)) {
-          this.selection.last = null
-
-          return
-        }
-
-        if (isAfter(day, this.selection.first)) {
-          this.selection.last = day
+        if (!sel.first || this.mode === 'single') {
+          sel.first = day
+        } else if (isEqual(sel.first, day)) {
+          sel.first = null
+          sel.last = null
+        } else if (isEqual(sel.last, day)) {
+          sel.last = null
+        } else if (isAfter(day, sel.first)) {
+          sel.last = day
         } else {
-          this.selection.first = day
+          sel.first = day
+        }
+
+        if (this.mode === 'single') {
+          this.$emit('input', sel.first)
+        } else {
+          this.$emit('input', sel)
         }
       }
     },
@@ -168,108 +230,126 @@
     box-sizing: border-box;
   }
 
-  ol {
-    border: 1px solid black;
-    width: 350px;
+  .date-picker {
+    /*position: relative;*/
 
-    li {
-      user-select: none;
+    .go {
       display: inline-block;
-      height: 50px;
-      line-height: 50px;
-      position: relative;
-      width: calc(100% / 7);
+      border: 0.8px solid #5d5d5d;
+      color: #5d5d5d;
+      width: 10px;
+      margin-top: calc(var(--width) / 7);
+      height: calc(var(--width) / 7 * 6 + 10px);
+      line-height: calc(var(--width) / 7 * 6 + 10px);
       text-align: center;
-      vertical-align: bottom;
-      border-radius: 100%;
+      border-radius: 2px;
+      vertical-align: top;
+    }
 
-      &.month-name {
-        width: 100%;
-        height: 30px;
-        line-height: 30px;
+    ol {
+      --cell-height: calc(var(--width) / 7);
+
+      width: var(--width);
+      display: inline-block;
+      margin: 0;
+      position: relative;
+
+      &:after {
+        position: absolute;
+        content: '';
+        margin-top: calc(var(--width) / 7);
+        height: calc(var(--width) / 7 * 6 + 10px);
+        width: 1px;
+        top: 0;
+        right: -0.5px;
+        background: #5d5d5d;
       }
 
-      &.day-name {
-        height: 30px;
-        line-height: 30px;
+      &:last-of-type:after {
+        display: none;
       }
 
-      &.day {
-        margin-top: 2px;
+      li {
+        user-select: none;
+        display: inline-block;
+        height: var(--cell-height);
+        line-height: var(--cell-height);
+        position: relative;
+        width: calc(100% / 7);
+        text-align: center;
+        vertical-align: bottom;
+        border-radius: 100%;
 
-        &:hover {
-          background: white;
-          color: black;
-          z-index: 2;
+        &.month-name {
+          width: 100%;
         }
 
-        &.selected {
-          color: white;
-          z-index: 1;
+        &.day, &.day-pad {
+          margin-top: 2px;
+        }
 
-          &:before {
-            content: '';
-            display: block;
-            position: absolute;
-            background: #4285f4;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            border-radius: 100%;
+        &.day {
+          &.today {
+            font-weight: bold;
           }
 
-          &:after {
-            content: '';
-            display: block;
-            position: absolute;
+          &:hover {
+            background: white;
+            color: black;
+            z-index: 2;
+          }
+
+          &.selected {
+            color: white;
+            z-index: 1;
+
+            &:before {
+              content: '';
+              display: block;
+              position: absolute;
+              background: #4285f4;
+              height: 100%;
+              width: 100%;
+              top: 0;
+              left: 0;
+              z-index: -1;
+              border-radius: 100%;
+            }
+
+            &:after {
+              content: '';
+              display: block;
+              position: absolute;
+              background: #e8faff;
+              height: 100%;
+              width: 50%;
+              top: 0;
+              z-index: -2;
+              border-radius: 0;
+            }
+
+            &.last:not(.first):after {
+              left: 0;
+            }
+
+            &.first:after {
+              right: 0;
+            }
+
+            &.first.last:not(.others-highlighted):after {
+              display: none;
+            }
+          }
+
+          &.highlighted:not(.selected) {
             background: #e8faff;
-            height: 100%;
-            width: 50%;
-            top: 0;
-            z-index: -2;
             border-radius: 0;
           }
 
-          &.last:not(.first):after {
-            left: 0;
-          }
-
-          &.first:after {
-            right: 0;
-          }
-
-          &.first.last:not(.others-highlighted):after {
-            display: none;
-          }
-        }
-
-        &.highlighted:not(.selected) {
-          background: #e8faff;
-          border-radius: 0;
-        }
-
-        &:not(.selected):hover {
-          color: white;
-
-          &:before {
-            content: '';
-            display: block;
-            position: absolute;
-            background: #4285f4;
-            height: calc(100% - 14px);
-            width: calc(100% - 14px);
-            top: 7px;
-            left: 7px;
-            z-index: -3;
-            border-radius: 100%;
-          }
-        }
-
-        &.highlighted:not(.selected) {
-          &:not(.in-range):hover {
-            border-radius: 0 100% 100% 0;
+          &.highlighted:not(.selected) {
+            &:not(.in-range):hover {
+              border-radius: 0 100% 100% 0;
+            }
           }
         }
       }
