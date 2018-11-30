@@ -1,6 +1,6 @@
 {
   "name": "v-cal-input",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "MIT",
   "main": "./dist/v-cal-input.common.js",
   "scripts": {
