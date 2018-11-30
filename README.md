@@ -26,7 +26,7 @@ npm install v-cal-input
 </template>
 
 <script>
-  import DatePicker from 'vue-calendar-input'
+  import DatePicker from 'v-cal-input'
 
   export default {
     name: 'Demo',
