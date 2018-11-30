@@ -191,6 +191,10 @@
       selected(day) {
         const sel = this.selection
 
+        if (this.mode === 'single') {
+          sel.last = null
+        }
+
         if (!sel.first || this.mode === 'single') {
           sel.first = day
         } else if (isEqual(sel.first, day)) {
@@ -229,6 +233,9 @@
 <style lang="scss" scoped>
   * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
   }
 
   .date-picker {
@@ -238,7 +245,6 @@
     ol {
       width: var(--width);
       display: inline-block;
-      margin: 0;
       position: relative;
 
       &:nth-child(2) {
