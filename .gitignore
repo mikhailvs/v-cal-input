@@ -18,6 +18,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
-dist/demo.html
 dist
-docs
