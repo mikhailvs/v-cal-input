@@ -2,12 +2,15 @@
   <div class="date-picker" :style="{
     '--width': `${width}px`
   }">
-    <span class="go" @click="backward()">&#8249;</span>
 
-    <ol v-for="offset in offsets" class="calendar">
+    <ol v-for="(index, offset) in offsets" class="calendar">
+      <li class="go" :class="{ showing: index === 0 }" @click="backward()">&#8249;</li>
+
       <li class="month-name">
         {{ monthName(offset) }} {{ year(offset) }}
       </li>
+
+      <li class="go" :class="{ showing: index === offsets.length - 1 }" @click="forward()">&#8250;</li>
 
       <li class="day-name" v-for="name in dayNames">
         {{ name }}
@@ -34,8 +37,6 @@
 
       <li class="day-pad" v-if="showExtraBlankRow(offset)" v-for="_ in Array(7)"></li>
     </ol>
-
-    <span class="go" @click="forward()">&#8250;</span>
   </div>
 </template>
 
@@ -59,13 +60,13 @@
 
     props: {
       value: {
-        type: Object,
-        default: { first: null, last: null }
+        type: [Date, Object],
+        default: () => ({ first: null, last: null })
       },
 
       width: {
         type: Number,
-        default: 250
+        default: 350
       },
 
       mode: {
@@ -231,42 +232,17 @@
   }
 
   .date-picker {
-    /*position: relative;*/
-
-    .go {
-      display: inline-block;
-      border: 0.8px solid #5d5d5d;
-      color: #5d5d5d;
-      width: 10px;
-      margin-top: calc(var(--width) / 7);
-      height: calc(var(--width) / 7 * 6 + 10px);
-      line-height: calc(var(--width) / 7 * 6 + 10px);
-      text-align: center;
-      border-radius: 2px;
-      vertical-align: top;
-    }
+    --width: calc(var(--width));
+    --cell-height: calc(var(--width) / 7);
 
     ol {
-      --cell-height: calc(var(--width) / 7);
-
       width: var(--width);
       display: inline-block;
       margin: 0;
       position: relative;
 
-      &:after {
-        position: absolute;
-        content: '';
-        margin-top: calc(var(--width) / 7);
-        height: calc(var(--width) / 7 * 6 + 10px);
-        width: 1px;
-        top: 0;
-        right: -0.5px;
-        background: #5d5d5d;
-      }
-
-      &:last-of-type:after {
-        display: none;
+      &:nth-child(2) {
+        background: #f2f2ff;
       }
 
       li {
@@ -280,8 +256,40 @@
         vertical-align: bottom;
         border-radius: 100%;
 
+        &.go {
+          &:not(.showing) {
+            visibility: hidden;
+          }
+
+          display: inline-block;
+          color: white;
+          background: #b1b1b1;
+          border-radius: 100%;
+          text-align: center;
+          vertical-align: top;
+          cursor: pointer;
+          font-size: 1.5em;
+          z-index: 1;
+
+          &:first-of-type {
+            left: 0;
+          }
+
+          &:last-of-type {
+            right: 0;
+          }
+
+          &:hover {
+            background: darken(#b1b1b1, 20%);
+          }
+
+          &:active {
+            background: darken(#b1b1b1, 40%);
+          }
+        }
+
         &.month-name {
-          width: 100%;
+          width: calc(var(--cell-height) * 5);
         }
 
         &.day, &.day-pad {
@@ -289,6 +297,8 @@
         }
 
         &.day {
+          cursor: pointer;
+
           &.today {
             font-weight: bold;
           }
