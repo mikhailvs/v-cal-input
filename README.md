@@ -1,4 +1,6 @@
 # Vue Calendar Input
+[![npm version](https://badge.fury.io/js/v-cal-input.svg)](https://badge.fury.io/js/v-cal-input)
+
 Simple, clean calendar input with single date select, or date range selection.
 
 ## [Demo](https://mikhailvs.github.io/v-cal-input/)
