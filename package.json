@@ -1,6 +1,6 @@
 {
   "name": "v-cal-input",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "MIT",
   "main": "./dist/v-cal-input.common.js",
   "repository": "mikhailvs/v-cal-input",
@@ -35,6 +35,6 @@
   ],
   "vue": {
     "css": { "extract": false },
-    "baseUrl": "/vue-calendar-input/"
+    "baseUrl": "/v-cal-input/"
   }
 }
