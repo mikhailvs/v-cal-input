@@ -69,11 +69,11 @@ v-cal-input is designed to be simple to customize. Here's the entire structure o
 
 The `.day` class has the following additional classes added to it based on component state.
 
-| class       | mode  | description                                 |
-| ----------- | ----- | ------------------------------------------- |
-| today       | both  | cell represents the current date            |
-| selected    | both  | cell is currently selected                  |
-| highlighted | range | cell is between the range of selected cells |
-| first       | range | cell is first selected in a range           |
-| last        | range | cell is last selected in a range            |
-| in-range    | range | cell is inside a selected range             |
+| class       | mode  | description                         |
+| ----------- | ----- | ----------------------------------- |
+| today       | both  | represents the current date         |
+| selected    | both  | currently selected                  |
+| highlighted | range | between the range of selected cells |
+| first       | range | first selected in a range           |
+| last        | range | last selected in a range            |
+| in-range    | range | inside a selected range             |
