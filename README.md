@@ -42,14 +42,23 @@ npm install v-cal-input
 
 ## Configuration
 ### props
-| name | default | description |
-| ---- | ------- | ------------|
-| value | `null` | the selected date(s) |
-| width | `350` | width of the calendar in `px` |
-| mode | `'single'` | `'single'` for single date, `'range'` for date ranges |
-| panels | `1` | the number of month panels to display |
+| name   | default    | description                       |
+| ------ | ---------- | --------------------------------- |
+| value  | `null`     | the selected date(s)              |
+| width  | `350`      | width of the calendar in `px`     |
+| mode   | `'single'` | `'single'` or `'range'`           |
+| panels | `1`        | number of month panels to display |
 
-## Styling
+### slots
+| name     | description       |
+| -------- | ----------------- |
+| forward  | next button       |
+| backward | back button       |
+| header   | panel header      |
+| dayLabel | day of week label |
+| day      | day cell          |
+
+### Styling
 v-cal-input is designed to be simple to customize. Here's the entire structure of a calendar panel
 ```html
 <ol class="calendar">

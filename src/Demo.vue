@@ -25,7 +25,11 @@
     <hr>
 
     <div>
-      <date-picker :panels="panels" :mode="mode" :width="width"/>
+      <date-picker :panels="panels" :mode="mode" :width="width">
+        <template slot="day" slot-scope="{ day }">
+          {{ day }}
+        </template>
+      </date-picker>
     </div>
   </div>
 </template>

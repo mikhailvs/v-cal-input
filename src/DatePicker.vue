@@ -4,16 +4,28 @@
   }">
 
     <ol v-for="(index, offset) in offsets" class="calendar">
-      <li class="go" :class="{ showing: index === 0 }" @click="backward()">&#8249;</li>
-
-      <li class="month-name">
-        {{ monthName(offset) }} {{ year(offset) }}
+      <li class="go" :class="{ showing: index === 0 }" @click="backward()">
+        <slot name="backward">
+          &#8249;
+        </slot>
       </li>
 
-      <li class="go" :class="{ showing: index === offsets.length - 1 }" @click="forward()">&#8250;</li>
+      <li class="month-name">
+        <slot name="header" :month="monthName(offset)" :year="year(offset)">
+          {{ monthName(offset) }} {{ year(offset) }}
+        </slot>
+      </li>
+
+      <li class="go" :class="{ showing: index === offsets.length - 1 }" @click="forward()">
+        <slot name="backward">
+          &#8250;
+        </slot>
+      </li>
 
       <li class="day-name" v-for="name in dayNames">
-        {{ name }}
+        <slot name="dayLabel" :name="name">
+          {{ name }}
+        </slot>
       </li>
 
       <li class="day-pad" v-for="_ in Array(weekdayPadding(offset))"></li>
@@ -32,7 +44,9 @@
           @mouseover="setLastHovered(day)"
           v-for="day in days(offset)"
       >
-        {{ day.getDate() }}
+        <slot name="day" :day="day.getDate()" :date="day">
+          {{ day.getDate() }}
+        </slot>
       </li>
 
       <li class="day-pad" v-for="_ in Array(7 * blankBottomRows(offset))"></li>
