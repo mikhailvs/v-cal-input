@@ -10,7 +10,7 @@
     "build-bundle": "vue-cli-service build --target lib --name v-cal-input ./src/DatePicker.vue"
   },
   "dependencies": {
-    "date-fns": "^1.29.0",
+    "date-fns": "^2.0.0-alpha.25",
     "vue": "^2.5.17"
   },
   "devDependencies": {
