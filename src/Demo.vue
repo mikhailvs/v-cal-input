@@ -25,11 +25,14 @@
     <hr>
 
     <div>
-      <date-picker :panels="panels" :mode="mode" :width="width">
+      <date-picker :panels="panels" :mode="mode" :width="width" v-model="dates">
         <template slot="day" slot-scope="{ day }">
           {{ day }}
         </template>
       </date-picker>
+      <div v-if="mode==='single'">dates: {{dates}}</div>
+      <div v-if="mode==='range'">dates.first: {{dates.first}}</div>
+      <div v-if="mode==='range'">dates.last: {{dates.last}}</div>
     </div>
   </div>
 </template>

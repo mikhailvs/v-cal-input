@@ -55,18 +55,21 @@
 </template>
 
 <script>
+  //for info in migrated funcs from date-fns 1.x to 2.x see
+  // https://date-fns.org/v2.0.0-alpha.1/docs/Change-Log
   import {
-    eachDay,
+    eachDayOfInterval as eachDay, //eachDay → eachDayOfInterval
     startOfMonth,
     endOfMonth,
     format,
-    isWithinRange,
+    isWithinInterval as isWithinRange, //isWithinRange → isWithinInterval
     isAfter,
     addMonths,
     isEqual,
     differenceInCalendarWeeks,
     subMonths,
-    isToday
+    isSameDay,  //isToday(date) → isSameDay(new Date(), date)
+
   } from 'date-fns'
 
   export default {
@@ -104,7 +107,8 @@
 
     methods: {
       isCurrentDay(day) {
-        return isToday(day)
+        //return isToday(day)
+        return isSameDay(new Date(), day)
       },
 
       forward() {
@@ -143,7 +147,13 @@
       isInRange(day) {
         return this.selection.first &&
           this.selection.last &&
-          isWithinRange(day, this.selection.first, this.selection.last)
+         // isWithinRange(day, this.selection.first, this.selection.last)
+            isWithinRange(day,
+                                    {
+                                      start: this.selection.first,
+                                      end: this.selection.last
+                                    }
+                                  )
       },
 
       isFirst(day) {
@@ -163,7 +173,11 @@
       },
 
       days(offset) {
-        return eachDay(this.firstDay(offset), this.lastDay(offset))
+       // return eachDay(this.firstDay(offset), this.lastDay(offset))
+        return eachDay({
+                         start: this.firstDay(offset),
+                         end:this.lastDay(offset)
+        })
       },
 
       firstDay(offset) {
@@ -175,11 +189,11 @@
       },
 
       monthName(offset) {
-        return format(addMonths(this.reference, offset), 'MMMM')
+        return format(addMonths(this.reference, offset), 'MMMM', {awareOfUnicodeTokens: true})
       },
 
       year(offset) {
-        return format(addMonths(this.reference, offset), 'YYYY')
+        return format(addMonths(this.reference, offset), 'YYYY', {awareOfUnicodeTokens: true})
       },
 
       daySelected(day) {
@@ -195,11 +209,15 @@
         const first = this.selection.first
         const last = this.selection.last || this.lastHovered
 
+        //is the first date after the 2nd date?
         if (isAfter(first, last)) {
           return false
         }
 
-        return isWithinRange(day, first, last)
+        return isWithinRange(day, {
+          start: first,
+          end: last
+        })
       },
 
       selected(day) {
