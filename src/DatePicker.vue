@@ -3,7 +3,7 @@
     '--width': `${width}px`
   }">
 
-    <ol v-for="(index, offset) in offsets" class="calendar">
+    <ol v-for="(offset, index) in offsets" class="calendar" :key="offset">
       <li class="go" :class="{ showing: index === 0 }" @click="backward()">
         <slot name="backward">
           &#8249;
@@ -23,7 +23,7 @@
       </li>
 
       <li class="day-name" v-for="name in dayNames">
-        <slot name="dayLabel" :name="name">
+        <slot name="dayLabel" :cellName="name">
           {{ name }}
         </slot>
       </li>
@@ -43,6 +43,7 @@
           @click="selected(day)"
           @mouseover="setLastHovered(day)"
           v-for="day in days(offset)"
+          :key="day.getDate()"
       >
         <slot name="day" :day="day.getDate()" :date="day">
           {{ day.getDate() }}
