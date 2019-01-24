@@ -59,4 +59,7 @@
 </script>
 
 <style lang="scss">
+.month-name {
+  color: green;
+}
 </style>

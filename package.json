@@ -34,7 +34,7 @@
     "vue", "calendar", "date-range", "date-picker", "date-input", "calendar-input", "day-range", "multi-panel-calendar", "date-range-picker", "date"
   ],
   "vue": {
-    "css": { "extract": false },
+    "css": { "extract": true },
     "baseUrl": "/v-cal-input/"
   }
 }
