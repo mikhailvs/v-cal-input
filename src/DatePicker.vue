@@ -106,6 +106,12 @@
       }
     },
 
+    watch: {
+      value(newValue) {
+        this.selection = newValue
+      }
+    },
+
     methods: {
       isCurrentDay(day) {
         //return isToday(day)
