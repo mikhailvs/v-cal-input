@@ -31,10 +31,21 @@
     "not ie <= 8"
   ],
   "keywords": [
-    "vue", "calendar", "date-range", "date-picker", "date-input", "calendar-input", "day-range", "multi-panel-calendar", "date-range-picker", "date"
+    "vue",
+    "calendar",
+    "date-range",
+    "date-picker",
+    "date-input",
+    "calendar-input",
+    "day-range",
+    "multi-panel-calendar",
+    "date-range-picker",
+    "date"
   ],
   "vue": {
-    "css": { "extract": true },
+    "css": {
+      "extract": true
+    },
     "baseUrl": "/v-cal-input/"
   }
 }
